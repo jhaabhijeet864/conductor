@@ -43,7 +43,7 @@ public class FunctionalInfraExtension
 
     private static final ElasticsearchContainer esContainer =
             new ElasticsearchContainer(
-                            DockerImageName.parse("elasticsearch").withTag("7.17.11"))
+                            DockerImageName.parse("elasticsearch").withTag("8.19.11"))
                     .withExposedPorts(9200, 9300)
                     .withEnv("xpack.security.enabled", "false")
                     .withEnv("discovery.type", "single-node");
@@ -76,6 +76,8 @@ public class FunctionalInfraExtension
                 redisContainer.getFirstMappedPort());
 
         // Set connection properties for Spring Boot to pick up
+        System.setProperty("conductor.indexing.type", "elasticsearch8");
+        System.setProperty("conductor.elasticsearch.version", "8");
         System.setProperty(
                 "conductor.elasticsearch.url",
                 "http://" + esContainer.getHttpHostAddress());

@@ -10,7 +10,12 @@ dependencies {
     testImplementation project(':conductor-core')
     testImplementation project(':conductor-redis-persistence')
     testImplementation project(':conductor-cassandra-persistence')
-    testImplementation project(':conductor-es7-persistence')
+    def indexingBackend = project.findProperty('indexingBackend') ?: 'elasticsearch8'
+    if (indexingBackend == 'elasticsearch7' || indexingBackend == 'es7') {
+        testImplementation project(':conductor-es7-persistence')
+    } else {
+        testImplementation project(':conductor-es8-persistence')
+    }
     testImplementation project(':conductor-grpc-server')
     testImplementation project(':conductor-grpc-client')
     testImplementation project(':conductor-json-jq-task')
@@ -39,8 +44,7 @@ dependencies {
     testImplementation "org.spockframework:spock-core:${revSpock}"
     testImplementation "org.spockframework:spock-spring:${revSpock}"
 
-    testImplementation "org.elasticsearch.client:elasticsearch-rest-client:${revElasticSearch7}"
-    testImplementation "org.elasticsearch.client:elasticsearch-rest-high-level-client:${revElasticSearch7}"
+    testImplementation "org.elasticsearch.client:elasticsearch-rest-client:${revElasticSearch8}"
 
     testImplementation "org.testcontainers:elasticsearch:${revTestContainer}"
     testImplementation "org.testcontainers:localstack:${revTestContainer}"

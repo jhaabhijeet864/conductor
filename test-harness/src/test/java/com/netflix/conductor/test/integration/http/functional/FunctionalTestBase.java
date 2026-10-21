@@ -63,7 +63,7 @@ public abstract class FunctionalTestBase {
     // Singleton containers — started once, reused across all functional test classes in the JVM.
     // TestContainers Ryuk cleans up on JVM exit.
     private static final ElasticsearchContainer esContainer =
-            new ElasticsearchContainer(DockerImageName.parse("elasticsearch").withTag("7.17.11"))
+            new ElasticsearchContainer(DockerImageName.parse("elasticsearch").withTag("8.19.11"))
                     .withExposedPorts(9200, 9300)
                     .withEnv("xpack.security.enabled", "false")
                     .withEnv("discovery.type", "single-node");
@@ -84,6 +84,8 @@ public abstract class FunctionalTestBase {
 
     @DynamicPropertySource
     static void containerProperties(DynamicPropertyRegistry registry) {
+        registry.add("conductor.indexing.type", () -> "elasticsearch8");
+        registry.add("conductor.elasticsearch.version", () -> "8");
         registry.add(
                 "conductor.elasticsearch.url", () -> "http://" + esContainer.getHttpHostAddress());
         registry.add(
